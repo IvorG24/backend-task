@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { getUser } from "@/utils/getuser";
-import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { getUser } from '@/utils/getuser';
+import { createClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
 
 export async function createTodos(formdata: FormData) {
   const supabase = createClient();
@@ -10,25 +10,25 @@ export async function createTodos(formdata: FormData) {
   const { data: user, error: userError } = await getUser();
 
   if (userError || !user) {
-    throw new Error("You are not authenticated");
+    throw new Error('You are not authenticated');
   }
 
   // Ensure `title` is a string
-  const title = formdata.get("title");
-  if (typeof title !== "string") {
-    throw new Error("Title must be a string");
+  const title = formdata.get('title');
+  if (typeof title !== 'string') {
+    throw new Error('Title must be a string');
   }
 
   const { error } = await supabase
-    .from("todos")
+    .from('todos')
     .insert({ user_id: user.id, title });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  revalidatePath("/dashboard");
-  console.log("Todo created successfully");
+  revalidatePath('/dashboard');
+  console.log('Todo created successfully');
 }
 
 export async function updateTodos(formdata: FormData, title_id: string) {
@@ -37,24 +37,24 @@ export async function updateTodos(formdata: FormData, title_id: string) {
   const { data: user, error: userError } = await getUser();
 
   if (userError || !user) {
-    throw new Error("You are not authenticated");
+    throw new Error('You are not authenticated');
   }
 
-  const title = formdata.get("title");
-  if (typeof title !== "string") {
-    throw new Error("Title must be a string");
+  const title = formdata.get('title');
+  if (typeof title !== 'string') {
+    throw new Error('Title must be a string');
   }
 
   const { error } = await supabase
-    .from("todos")
+    .from('todos')
     .update({ title: title })
-    .eq("id", title_id);
+    .eq('id', title_id);
   if (error) {
     throw new Error(error.message);
   }
 
-  revalidatePath("/dashboard");
-  console.log("Todo updated successfully");
+  revalidatePath('/dashboard');
+  console.log('Todo updated successfully');
 }
 
 export async function deleteTodos(title_id: string) {
@@ -63,15 +63,15 @@ export async function deleteTodos(title_id: string) {
   const { data: user, error: userError } = await getUser();
 
   if (userError || !user) {
-    throw new Error("You are not authenticated");
+    throw new Error('You are not authenticated');
   }
 
-  const { error } = await supabase.from("todos").delete().eq("id", title_id);
+  const { error } = await supabase.from('todos').delete().eq('id', title_id);
 
   if (error) {
     throw new Error(error.message);
   }
 
-  revalidatePath("/dashboard");
-  console.log("Todo deleted successfully");
+  revalidatePath('/dashboard');
+  console.log('Todo deleted successfully');
 }

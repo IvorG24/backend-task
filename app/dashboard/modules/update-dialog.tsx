@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,10 +9,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
-import { updateTodos } from "@/app/action/todo";
-import { Button } from "@/components/ui/button";
+import { updateTodos } from '@/app/action/todo';
+import { Button } from '@/components/ui/button';
 interface UpdateDialogProps {
   title: string;
   id: string;
@@ -20,7 +20,7 @@ interface UpdateDialogProps {
 const UpdateDialog = ({ title, id }: UpdateDialogProps) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="bg-yellow-500 text-white p-2 rounded">
+      <AlertDialogTrigger className='bg-yellow-500 text-white p-2 rounded'>
         Edit
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -29,7 +29,7 @@ const UpdateDialog = ({ title, id }: UpdateDialogProps) => {
             Are you absolutely you want to edit?
           </AlertDialogTitle>
           <form
-            className="space-y-4"
+            className='space-y-4'
             action={async (formdata) => {
               console.log(id);
 
@@ -37,15 +37,15 @@ const UpdateDialog = ({ title, id }: UpdateDialogProps) => {
             }}
           >
             <input
-              type="text"
-              name="title"
+              type='text'
+              name='title'
               defaultValue={title}
-              className="border p-2 rounded w-full"
-              placeholder="edit a todo"
+              className='border p-2 rounded w-full'
+              placeholder='edit a todo'
             />
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction type="submit">
+              <AlertDialogAction type='submit'>
                 Submit New Todo
               </AlertDialogAction>
             </div>

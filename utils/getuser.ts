@@ -1,5 +1,5 @@
-import { UserData } from "@/types/types";
-import { createClient } from "./supabase/server";
+import { UserData } from '@/types/types';
+import { createClient } from './supabase/server';
 
 export async function getUser(): Promise<{ data?: UserData; error?: any }> {
   const supabase = createClient();
@@ -10,18 +10,18 @@ export async function getUser(): Promise<{ data?: UserData; error?: any }> {
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    console.error("Error fetching authenticated user:", userError);
+    console.error('Error fetching authenticated user:', userError);
     return { error: userError };
   }
 
   const { data, error } = await supabase
-    .from("user")
-    .select("id, role")
-    .eq("id", user.id)
+    .from('user')
+    .select('id, role')
+    .eq('id', user.id)
     .single();
 
   if (error) {
-    console.error("Error fetching user data:", error);
+    console.error('Error fetching user data:', error);
     return { error };
   }
 
