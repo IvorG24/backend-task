@@ -16,7 +16,7 @@ export async function getUser(): Promise<{ data?: UserData; error?: any }> {
 
   const { data, error } = await supabase
     .from('user')
-    .select('id, role')
+    .select('id, role,avatar')
     .eq('id', user.id)
     .single();
 
@@ -27,3 +27,20 @@ export async function getUser(): Promise<{ data?: UserData; error?: any }> {
 
   return { data };
 }
+
+// utils/getuser.ts
+
+export const getSession = async () => {
+  const supabase = createClient();
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    throw new Error(`Error fetching user: ${error.message}`);
+  }
+
+  const user = session?.user;
+  return { data: user };
+};

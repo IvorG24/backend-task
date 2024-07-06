@@ -6,4 +6,5 @@ export type TodoData = {
 export type UserData = {
   id: string;
   role: string;
+  avatar: string;
 };

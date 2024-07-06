@@ -33,21 +33,25 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = (await supabase.auth.getUser()).data;
+  const { pathname } = request.nextUrl;
+  const url = request.nextUrl.clone();
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/sign-in') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = '/sign-in';
-    return NextResponse.redirect(url);
+  if (user) {
+    if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+  } else {
+    if (
+      ['/dashboard', '/profile', '/upload'].some((path) =>
+        pathname.startsWith(path)
+      )
+    ) {
+      url.pathname = '/sign-in';
+      return NextResponse.redirect(url);
+    }
   }
-
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:
