@@ -3,25 +3,20 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useResumeData } from '@/hook/resumeData';
 import { Input } from '@/components/ui/input';
+import { useGetResume } from '@/services/resume';
+import { toast } from '@/components/ui/use-toast';
 type UploadPageProps = {
-  variant: 'admin' | 'user';
+  variant: 'admin' | 'member';
 };
 const UploadForm = ({ variant }: UploadPageProps) => {
-  const {
-    keyword,
-    setKeyword,
-    isLoading,
-    error,
-    resumes,
-    handleUpload,
-    formRef,
-    uploadStatus,
-  } = useResumeData();
+  const { keyword, setKeyword, resumes, handleUpload, formRef, uploadStatus } =
+    useResumeData();
 
+  const { data, isLoading, isError, error } = useGetResume(keyword);
   return (
     <>
       {variant === 'admin' ? (
-        <div>
+        <div className='w-full space-y-4 '>
           <h1>Search Resumes</h1>
           <Input
             type='text'
@@ -31,20 +26,35 @@ const UploadForm = ({ variant }: UploadPageProps) => {
             placeholder='Enter keyword'
           />
           <Button
+            className='w-full'
             type='button'
             onClick={() => {
-              // Manually trigger the fetch resumes when button is clicked
               setKeyword(keyword);
             }}
             disabled={isLoading}
           >
             {isLoading ? 'Searching...' : 'Search'}
           </Button>
-          {error && <p>Error: {error}</p>}
+          {isLoading && <p>Loading...</p>}
+          {isError && <p>Error: {error.message}</p>}
           <ul>
-            {resumes.map((resume, index) => (
-              <li key={index}>{resume.content}</li>
-            ))}
+            {data && (
+              <div>
+                <h2>Search Results:</h2>
+                <ul>
+                  {data.map(
+                    (resume: any, index: React.Key | null | undefined) => (
+                      <li
+                        key={index}
+                        className='p-4 border border-gray-200 rounded-md shadow-sm mb-2'
+                      >
+                        <pre>{resume.content}</pre>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+            )}
           </ul>
         </div>
       ) : (
@@ -53,9 +63,22 @@ const UploadForm = ({ variant }: UploadPageProps) => {
           <form
             ref={formRef}
             onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(formRef.current!);
-              handleUpload(formData);
+              try {
+                e.preventDefault();
+                const formData = new FormData(formRef.current!);
+                handleUpload(formData);
+
+                toast({
+                  title: 'Resume Uploaded Sucessfully',
+                  description: `${uploadStatus}`,
+                });
+              } catch (e) {
+                toast({
+                  title: 'Uh oh! Something went wrong.',
+                  description: `${uploadStatus}`,
+                  variant: 'destructive',
+                });
+              }
             }}
             encType='multipart/form-data'
             className='flex flex-col gap-4'

@@ -18,7 +18,8 @@ export async function getTodo(
     .from('todos')
     .select('id, title')
     .eq('user_id', user.id)
-    .range(from, to);
+    .range(from, to)
+    .order('createDate', { ascending: false });
 
   if (error) {
     console.error('Error fetching todo data:', error);

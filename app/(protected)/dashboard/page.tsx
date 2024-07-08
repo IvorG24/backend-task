@@ -16,7 +16,6 @@ const DashboardPage = async ({
   if (isNaN(page) || page < 1) {
     redirect('/dashboard?page=1');
   }
-
   const limit = 100;
   const offset = (page - 1) * limit;
   const { data: todos } = await getTodo(offset, offset + limit - 1);
@@ -30,7 +29,7 @@ const DashboardPage = async ({
 
   return (
     <>
-      {user.role === 'user' ? (
+      {user.role === 'member' ? (
         <TodoList
           variant='user'
           todos={todos}

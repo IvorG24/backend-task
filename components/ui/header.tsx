@@ -3,6 +3,9 @@ import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { UserImage } from './userImage';
+import { signOut } from '@/app/action/auth';
+import { SubmitButton } from './formbutton';
+import { Submit } from './submitbutton';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -29,16 +32,11 @@ const Header = () => {
             </li>
           ))}
         </ul>
-
-        {/* Sign Out Button */}
-        {/* <form action={signOutButton.href} method={signOutButton.method}>
-          <button
-            type='submit'
-            className={signOutButton.classes}
-          >
-            {signOutButton.label}
-          </button>
-        </form> */}
+        <form action={signOut}>
+          <Submit pendingText='Signing out ...' type='submit'>
+            Sign Out
+          </Submit>
+        </form>
       </div>
     </nav>
   );

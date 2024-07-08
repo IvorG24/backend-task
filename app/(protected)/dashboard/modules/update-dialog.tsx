@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import { updateTodos } from '@/app/action/todo';
-import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
 interface UpdateDialogProps {
   title: string;
   id: string;
@@ -26,14 +26,27 @@ const UpdateDialog = ({ title, id }: UpdateDialogProps) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you absolutely you want to edit?
+            <AlertDialogDescription>
+              Are you absolutely you want to edit?
+            </AlertDialogDescription>
           </AlertDialogTitle>
           <form
             className='space-y-4'
             action={async (formdata) => {
-              console.log(id);
-
-              await updateTodos(formdata, id);
+              try {
+                await updateTodos(formdata, id);
+                const title = formdata.get('title');
+                toast({
+                  title: 'Updated new todo',
+                  description: `${title}`,
+                });
+              } catch (error) {
+                toast({
+                  title: 'Uh oh! Something went wrong.',
+                  description: `${error}`,
+                  variant: 'destructive',
+                });
+              }
             }}
           >
             <input

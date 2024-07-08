@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <>
       <Container>
         <Header />
-        <main className='min-h-screen flex flex-col w-full items-center justify-center mx-20'>
+        <main className='min-h-screen flex flex-col w-full items-center justify-center px-20'>
           {children}
         </main>
       </Container>

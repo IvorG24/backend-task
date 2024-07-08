@@ -8,3 +8,10 @@ export type UserData = {
   role: string;
   avatar: string;
 };
+
+export type TodoDataProps = {
+  todos: TodoData[] | undefined;
+  variant: 'member' | 'admin';
+  currentPage: number;
+  totalPages: number;
+};

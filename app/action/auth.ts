@@ -1,39 +1,65 @@
 'use server';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-export async function signIn(formdata: FormData) {
+import { SignInValues, signInSchema, signUpSchema } from '@/lib/schema';
+export async function signIn(values: SignInValues) {
   const supabase = createClient();
 
-  const email = formdata.get('email') as string;
-  const password = formdata.get('password') as string;
+  const { success, error: validationError } =
+    await signInSchema.safeParseAsync(values);
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  if (!success) {
+    throw new Error(`${validationError?.message}`);
+  }
+
+  const { email, password } = values;
+
+  const { data, error: signInError } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  if (error) {
-    throw new Error(`Error ${error}`);
+  if (signInError) {
+    throw new Error(` ${signInError.message}`);
   }
 
-  console.log('user logged in successfully', data);
+  console.log('User logged in successfully');
   redirect('/dashboard');
 }
 
-export async function signUp(formdata: FormData) {
+export async function signUp(values: SignInValues) {
   const supabase = createClient();
-  const email = formdata.get('email') as string;
-  const password = formdata.get('password') as string;
 
-  const { data, error } = await supabase.auth.signUp({
+  const { success, error: validationError } =
+    await signUpSchema.safeParseAsync(values);
+
+  if (!success) {
+    throw new Error(`${validationError?.message}`);
+  }
+
+  const { email, password } = values;
+  const { data, error: signInError } = await supabase.auth.signUp({
     email,
     password,
   });
 
-  if (error) {
-    throw new Error(`Error ${error}`);
+  if (signInError) {
+    throw new Error(` ${signInError.message}`);
   }
 
   console.log('user register successfully');
+  redirect('/dashboard');
+}
+
+export async function signOut() {
+  const supabase = createClient();
+
+  const response = await supabase.auth.signOut();
+
+  if (!response) {
+    throw new Error(response);
+  }
+
+  console.log('user log out successfully');
   redirect('/sign-in');
 }
