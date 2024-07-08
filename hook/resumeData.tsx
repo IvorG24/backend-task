@@ -1,11 +1,10 @@
+import { toast } from '@/components/ui/use-toast';
 import { uploadResume } from '@/services/resume';
 import React, { useEffect, useRef, useState } from 'react';
 
 export const useResumeData = () => {
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [keyword, setKeyword] = useState<string>('developer');
-  const [resumes, setResumes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async (formdata: FormData) => {
@@ -14,12 +13,18 @@ export const useResumeData = () => {
     }
     setIsLoading(true);
     try {
-      const result = await uploadResume(formdata);
-      setUploadStatus(result.message);
+      await uploadResume(formdata);
+      toast({
+        title: 'Resume Uploaded Sucessfully',
+      });
       formRef.current?.reset();
     } catch (error) {
       console.error(error);
-      setUploadStatus('Failed to upload resumes');
+      toast({
+        title: 'Uh oh! Something went wrong.',
+        description: `${error}`,
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -28,9 +33,7 @@ export const useResumeData = () => {
     handleUpload,
     keyword,
     formRef,
-    resumes,
     setKeyword,
     isLoading,
-    uploadStatus,
   };
 };

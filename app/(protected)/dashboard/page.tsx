@@ -31,7 +31,7 @@ const DashboardPage = async ({
     <>
       {user.role === 'member' ? (
         <TodoList
-          variant='user'
+          variant='member'
           todos={todos}
           currentPage={page}
           totalPages={totalPages}

@@ -38,3 +38,9 @@ export const UpdateTodoSchema = z.object({
   }),
 });
 export type UpdateTodoValues = z.infer<typeof UpdateTodoSchema>;
+
+export const imageSchema = z.object({
+  name: z.string(),
+  type: z.enum(['image/jpeg', 'image/png', 'image/gif']),
+  size: z.number().max(5 * 1024 * 1024, 'File size should not exceed 5MB'),
+});

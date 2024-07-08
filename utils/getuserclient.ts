@@ -1,5 +1,5 @@
 import { UserData } from '@/types/types';
-import { createClient } from './supabase/server';
+import { createClient } from './supabase/client';
 
 export async function getUser(): Promise<{ data?: UserData; error?: any }> {
   const supabase = createClient();

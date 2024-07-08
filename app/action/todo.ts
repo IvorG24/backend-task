@@ -5,6 +5,7 @@ import { getUser } from '@/utils/getuser';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 
+//for creating todo
 export async function createTodos(values: TodoValues) {
   const supabase = createClient();
   const { data: user, error: userError } = await getUser();
@@ -34,6 +35,7 @@ export async function createTodos(values: TodoValues) {
   console.log('Todo created successfully');
 }
 
+//for update todo
 export async function updateTodos(formdata: FormData, title_id: string) {
   const supabase = createClient();
 
@@ -60,6 +62,7 @@ export async function updateTodos(formdata: FormData, title_id: string) {
   console.log('Todo updated successfully');
 }
 
+//for deleting todo
 export async function deleteTodos(title_id: string) {
   const supabase = createClient();
 

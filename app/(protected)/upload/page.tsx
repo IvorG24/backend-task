@@ -14,7 +14,7 @@ const page = async () => {
       {user.role === 'admin' ? (
         <UploadForm variant={'admin'} />
       ) : (
-        <UploadForm variant={'user'} />
+        <UploadForm variant={'member'} />
       )}
     </>
   );

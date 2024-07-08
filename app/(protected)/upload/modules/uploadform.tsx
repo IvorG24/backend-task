@@ -3,16 +3,16 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useResumeData } from '@/hook/resumeData';
 import { Input } from '@/components/ui/input';
-import { useGetResume } from '@/services/resume';
-import { toast } from '@/components/ui/use-toast';
+import { useGetResume } from '@/services/fetchresume';
+
 type UploadPageProps = {
   variant: 'admin' | 'member';
 };
-const UploadForm = ({ variant }: UploadPageProps) => {
-  const { keyword, setKeyword, resumes, handleUpload, formRef, uploadStatus } =
-    useResumeData();
 
+const UploadForm = ({ variant }: UploadPageProps) => {
+  const { keyword, setKeyword, handleUpload, formRef } = useResumeData();
   const { data, isLoading, isError, error } = useGetResume(keyword);
+
   return (
     <>
       {variant === 'admin' ? (
@@ -62,23 +62,9 @@ const UploadForm = ({ variant }: UploadPageProps) => {
           <h1 className='text-2xl font-bold mb-4'>Upload Resume</h1>
           <form
             ref={formRef}
-            onSubmit={(e) => {
-              try {
-                e.preventDefault();
-                const formData = new FormData(formRef.current!);
-                handleUpload(formData);
-
-                toast({
-                  title: 'Resume Uploaded Sucessfully',
-                  description: `${uploadStatus}`,
-                });
-              } catch (e) {
-                toast({
-                  title: 'Uh oh! Something went wrong.',
-                  description: `${uploadStatus}`,
-                  variant: 'destructive',
-                });
-              }
+            action={async () => {
+              const formData = new FormData(formRef.current!);
+              handleUpload(formData);
             }}
             encType='multipart/form-data'
             className='flex flex-col gap-4'
@@ -94,7 +80,6 @@ const UploadForm = ({ variant }: UploadPageProps) => {
               {isLoading ? 'Uploading...' : 'Upload Resumes'}
             </Button>
           </form>
-          {uploadStatus && <p className='mt-4'>{uploadStatus}</p>}
         </div>
       )}
     </>
