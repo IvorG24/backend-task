@@ -9,13 +9,11 @@ const page = async () => {
   if (!user) {
     redirect('/sign-in');
   }
+
+  const variant = user.role === 'member' ? 'member' : 'admin';
   return (
     <>
-      {user.role === 'admin' ? (
-        <UploadForm variant={'admin'} />
-      ) : (
-        <UploadForm variant={'member'} />
-      )}
+      <UploadForm variant={variant} />
     </>
   );
 };

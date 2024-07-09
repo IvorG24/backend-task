@@ -25,7 +25,7 @@ const TodoList = ({
 
   return (
     <div className='container mx-auto p-4'>
-      {todos?.length && todos.length > 99 && (
+      {todos?.length && todos.length >= 99 && (
         <div className='flex justify-center gap-2 mt-4'>
           <Link
             href={`/dashboard?page=${currentPage - 1}`}

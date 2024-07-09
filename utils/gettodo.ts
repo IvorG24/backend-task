@@ -6,7 +6,7 @@ import { TodoData } from '@/types/types'; // Adjust the path to where your types
 export async function getTodo(
   from: number,
   to: number
-): Promise<{ data?: TodoData[]; error?: any }> {
+): Promise<{ data?: TodoData[]; count?: number; error?: any }> {
   const supabase = createClient();
   const { data: user, error: userError } = await getUser();
 
@@ -26,5 +26,15 @@ export async function getTodo(
     return { error };
   }
 
-  return { data };
+  const { count, error: countError } = await supabase
+    .from('todos')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id);
+
+  if (countError) {
+    console.error('Error fetching todo count:', countError);
+    return { error: countError };
+  }
+
+  return { data, count: count ?? 0 };
 }

@@ -21,7 +21,6 @@ const useTodoData = (todos: TodoData[] = []) => {
     defaultValues: { title: '' },
   });
 
-  // Handle form submission
   const onSubmit = async (values: TodoValues) => {
     try {
       await createTodos(values);

@@ -1,17 +1,16 @@
 import { toast } from '@/components/ui/use-toast';
-import { uploadResume } from '@/services/resume';
+import { uploadResume, useGetResume } from '@/services/resume';
 import React, { useEffect, useRef, useState } from 'react';
 
 export const useResumeData = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [keyword, setKeyword] = useState<string>('developer');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async (formdata: FormData) => {
     if (!(formdata instanceof FormData)) {
       throw new Error('Invalid form data');
     }
-    setIsLoading(true);
+
     try {
       await uploadResume(formdata);
       toast({
@@ -25,11 +24,13 @@ export const useResumeData = () => {
         description: `${error}`,
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
+  const { data, isLoading, isError, error } = useGetResume(keyword);
   return {
+    data,
+    isError,
+    error,
     handleUpload,
     keyword,
     formRef,
